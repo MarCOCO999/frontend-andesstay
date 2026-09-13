@@ -1,0 +1,21 @@
+@if (type === 'CABANA') {
+  <!-- TODO: reemplazar por fotografia real de la cabana/lodge (ver /public/images) -->
+  <svg viewBox="0 0 200 140" xmlns="http://www.w3.org/2000/svg">
+    <rect width="200" height="140" fill="#e7cdb0" />
+    <polygon points="0,90 60,40 120,90" fill="#8a9b7c" />
+    <polygon points="90,95 140,55 200,95" fill="#6b7d5e" />
+    <rect x="30" y="90" width="60" height="45" fill="#6b5642" />
+    <polygon points="30,90 60,65 90,90" fill="#4d3d2c" />
+    <rect x="52" y="108" width="16" height="27" fill="#3a3226" />
+  </svg>
+} @else {
+  <!-- TODO: reemplazar por fotografia real de la habitacion (ver /public/images) -->
+  <svg viewBox="0 0 200 140" xmlns="http://www.w3.org/2000/svg">
+    <rect width="200" height="140" fill="#dde7d7" />
+    <rect x="20" y="70" width="160" height="45" rx="6" fill="#fffdf8" stroke="#c7dcc0" stroke-width="2" />
+    <rect x="20" y="60" width="45" height="20" rx="4" fill="#b97a56" opacity="0.85" />
+    <rect x="140" y="30" width="40" height="35" fill="#fffdf8" stroke="#c7dcc0" stroke-width="2" />
+    <line x1="160" y1="30" x2="160" y2="65" stroke="#c7dcc0" stroke-width="2" />
+  </svg>
+}
+<span class="unit-type-badge">{{ type === 'CABANA' ? 'Cabaña' : 'Habitación' }}</span>

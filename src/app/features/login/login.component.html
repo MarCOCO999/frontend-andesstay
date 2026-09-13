@@ -1,0 +1,59 @@
+<div class="login-screen">
+  <div class="hero">
+    <svg viewBox="0 0 600 800" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg" class="hero-illustration">
+      <rect width="600" height="800" fill="url(#sky)" />
+      <defs>
+        <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#e7cdb0" />
+          <stop offset="55%" stop-color="#d9b98f" />
+          <stop offset="100%" stop-color="#8a9b7c" />
+        </linearGradient>
+      </defs>
+      <circle cx="460" cy="150" r="70" fill="#f3e2c8" opacity="0.9" />
+      <!-- Cordillera -->
+      <polygon points="0,420 120,260 220,400 320,220 430,410 520,300 600,420 600,800 0,800" fill="#6b7d5e" opacity="0.9" />
+      <polygon points="0,480 150,350 260,470 380,320 500,470 600,400 600,800 0,800" fill="#586b4d" />
+      <polygon points="90,262 120,260 150,320 90,320" fill="#f4efe6" opacity="0.85" />
+      <polygon points="300,222 320,220 350,290 290,290" fill="#f4efe6" opacity="0.85" />
+      <!-- Lodge -->
+      <g transform="translate(210,560)">
+        <polygon points="0,60 90,0 180,60" fill="#4d3d2c" />
+        <rect x="15" y="60" width="150" height="110" fill="#6b5642" />
+        <rect x="60" y="110" width="35" height="60" fill="#3a3226" />
+        <rect x="105" y="90" width="30" height="30" fill="#e7cdb0" opacity="0.9" />
+        <rect x="0" y="55" width="180" height="10" fill="#3a3226" />
+      </g>
+      <!-- Arboles -->
+      <g fill="#4d5f43">
+        <polygon points="90,650 70,720 110,720" />
+        <polygon points="90,630 65,700 115,700" />
+        <polygon points="470,640 448,715 492,715" />
+        <polygon points="470,615 442,695 498,695" />
+      </g>
+    </svg>
+    <div class="hero-caption">
+      <span class="hero-kicker">Turismo de intereses especiales</span>
+      <h2>Hostales, cabañas y lodges de los Andes</h2>
+    </div>
+  </div>
+
+  <div class="login-panel">
+    <div class="login-card">
+      <span class="brand-kicker">AndesStay</span>
+      <h1>Bienvenido</h1>
+      <p>Inicia sesión con tu cuenta corporativa para gestionar reservas, catálogo y reportería.</p>
+      @if (sessionExpired) {
+        <p class="session-expired">Tu sesión expiró o el token ya no es válido. Vuelve a iniciar sesión.</p>
+      }
+      <button type="button" class="ms-login-button" (click)="login()">
+        <svg width="18" height="18" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="1" y="1" width="9" height="9" fill="#f25022" />
+          <rect x="11" y="1" width="9" height="9" fill="#7fba00" />
+          <rect x="1" y="11" width="9" height="9" fill="#00a4ef" />
+          <rect x="11" y="11" width="9" height="9" fill="#ffb900" />
+        </svg>
+        Iniciar sesión con Microsoft
+      </button>
+    </div>
+  </div>
+</div>

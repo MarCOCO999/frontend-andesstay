@@ -1,0 +1,120 @@
+<h1>Catálogo de unidades</h1>
+<p class="subtitle">Habitaciones, cabañas y lodges: tarifas y disponibilidad.</p>
+
+@if (errorMessage) {
+  <p class="error">{{ errorMessage }}</p>
+}
+@if (successMessage) {
+  <p class="success">{{ successMessage }}</p>
+}
+
+@if (canManage) {
+  <form class="form-panel" #form="ngForm" (ngSubmit)="create()">
+    <h3>Nueva unidad</h3>
+    <div class="form-row">
+      <label>
+        Código
+        <input type="text" name="code" [(ngModel)]="newUnit.code" required />
+      </label>
+      <label>
+        Tipo
+        <select name="type" [(ngModel)]="newUnit.type" required>
+          <option value="HABITACION">Habitación</option>
+          <option value="CABANA">Cabaña</option>
+        </select>
+      </label>
+      <label>
+        Capacidad
+        <input type="number" name="capacity" [(ngModel)]="newUnit.capacity" min="1" required />
+      </label>
+      <label>
+        Tarifa por noche
+        <input type="number" name="nightlyRate" [(ngModel)]="newUnit.nightlyRate" min="0" step="1000" required />
+      </label>
+      <label>
+        Inventario total
+        <input type="number" name="totalUnits" [(ngModel)]="newUnit.totalUnits" min="1" required />
+      </label>
+    </div>
+    <div class="amenities-picker">
+      <span class="amenities-picker-label">Valores agregados</span>
+      <div class="amenities-options">
+        @for (amenity of availableAmenities; track amenity) {
+          <label class="amenity-chip" [class.selected]="isSelected(newUnit.amenities, amenity)">
+            <input type="checkbox" [checked]="isSelected(newUnit.amenities, amenity)" (change)="toggleNewUnitAmenity(amenity)" />
+            {{ amenityLabels[amenity] }}
+          </label>
+        }
+      </div>
+    </div>
+    <button type="submit" class="primary" [disabled]="form.invalid">Crear unidad</button>
+  </form>
+}
+
+@if (loading) {
+  <p>Cargando...</p>
+} @else {
+  <div class="unit-grid">
+    @for (u of units; track u.id) {
+      <article class="unit-card" [class.inactive]="!u.active">
+        <app-unit-photo [type]="u.type" />
+
+        <div class="unit-body">
+          <div class="unit-heading">
+            <h3>{{ u.code }}</h3>
+            <span class="status-badge" [class.status-off]="!u.active">{{ u.active ? 'Activa' : 'Inactiva' }}</span>
+          </div>
+          <p class="unit-meta">Capacidad {{ u.capacity }} · ${{ u.nightlyRate | number: '1.0-0' }} / noche</p>
+
+          @if (editingId === u.id) {
+            <div class="edit-form">
+              <label>
+                Tarifa
+                <input type="number" [(ngModel)]="editForm.nightlyRate" name="editRate-{{u.id}}" />
+              </label>
+              <label>
+                Disponibles (máx {{ u.totalUnits }})
+                <input type="number" [(ngModel)]="editForm.availableUnits" name="editAvail-{{u.id}}" [max]="u.totalUnits" min="0" />
+              </label>
+              <label class="checkbox-label">
+                <input type="checkbox" [(ngModel)]="editForm.active" name="editActive-{{u.id}}" />
+                Activa
+              </label>
+              <div class="amenities-picker">
+                <span class="amenities-picker-label">Valores agregados</span>
+                <div class="amenities-options">
+                  @for (amenity of availableAmenities; track amenity) {
+                    <label class="amenity-chip" [class.selected]="isSelected(editForm.amenities, amenity)">
+                      <input type="checkbox" [checked]="isSelected(editForm.amenities, amenity)" (change)="toggleEditAmenity(amenity)" />
+                      {{ amenityLabels[amenity] }}
+                    </label>
+                  }
+                </div>
+              </div>
+              <div class="actions-cell">
+                <button type="button" class="secondary" (click)="saveEdit(u)">Guardar</button>
+                <button type="button" class="secondary" (click)="cancelEdit()">Cancelar</button>
+              </div>
+            </div>
+          } @else {
+            <p class="unit-availability">
+              <strong>{{ u.availableUnits }}</strong> / {{ u.totalUnits }} disponibles
+            </p>
+            @if (u.amenities.length > 0) {
+              <div class="amenity-tags">
+                @for (amenity of u.amenities; track amenity) {
+                  <span class="amenity-tag">{{ amenityLabels[amenity] }}</span>
+                }
+              </div>
+            }
+            @if (canManage) {
+              <button type="button" class="secondary" (click)="startEdit(u)">Editar</button>
+            }
+          }
+        </div>
+      </article>
+    } @empty {
+      <p>No hay unidades registradas.</p>
+    }
+  </div>
+}

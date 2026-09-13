@@ -1,0 +1,125 @@
+.unit-picker-section {
+  margin-bottom: 1.75rem;
+
+  h3 {
+    margin: 0 0 0.9rem;
+    font-size: 1.05rem;
+  }
+}
+
+.unit-picker-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1rem;
+}
+
+.unit-pick-card {
+  background: var(--color-surface);
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow-soft);
+  cursor: pointer;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+
+  &:hover {
+    box-shadow: var(--shadow-medium);
+  }
+
+  &.selected {
+    border-color: var(--color-primary);
+  }
+
+  &.disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+  }
+}
+
+.unit-pick-body {
+  padding: 0.9rem 1rem 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.unit-pick-heading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+
+  h4 {
+    margin: 0;
+    font-size: 0.98rem;
+    font-family: var(--font-heading);
+  }
+}
+
+.unit-pick-price {
+  font-size: 0.82rem;
+  color: var(--color-primary-dark);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.unit-pick-meta {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 0.85rem;
+}
+
+.unit-pick-availability {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-primary-dark);
+
+  &.sold-out {
+    color: var(--color-error-text);
+  }
+}
+
+.payment-timing-row {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  margin: 0.9rem 0 1rem;
+  font-size: 0.9rem;
+}
+
+.radio-option {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--color-text);
+  cursor: pointer;
+
+  input {
+    accent-color: var(--color-primary);
+  }
+}
+
+.estimated-total {
+  margin: 0 0 1rem;
+  font-size: 0.95rem;
+
+  strong {
+    color: var(--color-primary-dark);
+    font-size: 1.15rem;
+  }
+
+  .muted {
+    color: var(--color-text-muted);
+    font-size: 0.82rem;
+  }
+}
+
+.selected-unit-hint {
+  margin: -0.3rem 0 1rem;
+  font-size: 0.9rem;
+  color: var(--color-text);
+
+  &.muted {
+    color: var(--color-text-muted);
+  }
+}

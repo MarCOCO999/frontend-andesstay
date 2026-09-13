@@ -1,0 +1,86 @@
+<a routerLink="/reservations" class="back-link">← Volver a reservas</a>
+
+@if (loading) {
+  <p>Cargando...</p>
+} @else if (errorMessage && !reservation) {
+  <p class="error">{{ errorMessage }}</p>
+} @else if (reservation) {
+  <h1>Reserva #{{ reservation.id }}</h1>
+  <p class="subtitle">Creada el {{ reservation.createdAt | date: 'medium' }}</p>
+
+  @if (errorMessage) {
+    <p class="error">{{ errorMessage }}</p>
+  }
+  @if (successMessage) {
+    <p class="success">{{ successMessage }}</p>
+  }
+
+  <div class="detail-layout">
+    @if (unit) {
+      <article class="unit-summary-card">
+        <app-unit-photo [type]="unit.type" />
+        <div class="unit-summary-body">
+          <h3>{{ unit.code }}</h3>
+          <p class="unit-meta">Capacidad {{ unit.capacity }} · ${{ unit.nightlyRate | number: '1.0-0' }} / noche</p>
+          @if (unit.amenities.length > 0) {
+            <div class="amenity-tags">
+              @for (amenity of unit.amenities; track amenity) {
+                <span class="amenity-tag">{{ amenityLabels[amenity] }}</span>
+              }
+            </div>
+          }
+        </div>
+      </article>
+    }
+
+    <div class="detail-panel">
+      <dl>
+        <dt>Estado</dt>
+        <dd><span class="status-badge">{{ reservation.status }}</span></dd>
+
+        <dt>Check-in</dt>
+        <dd>{{ reservation.checkInDate }}</dd>
+
+        <dt>Check-out</dt>
+        <dd>{{ reservation.checkOutDate }}</dd>
+
+        <dt>Huéspedes</dt>
+        <dd>{{ reservation.guestCount }}</dd>
+
+        <dt>Monto total</dt>
+        <dd class="amount">${{ reservation.totalAmount | number: '1.0-0' }}</dd>
+
+        <dt>Forma de pago</dt>
+        <dd>
+          {{ paymentTimingLabels[reservation.paymentTiming] }}
+          <span class="status-badge" [class.status-off]="!reservation.paid">
+            {{ reservation.paid ? 'Pagado' : 'Pendiente' }}
+          </span>
+        </dd>
+
+        @if (reservation.paid) {
+          <dt>Método</dt>
+          <dd>{{ paymentMethodLabels[reservation.paymentMethod!] }}</dd>
+
+          <dt>N° de transacción</dt>
+          <dd><code>{{ reservation.transactionId }}</code></dd>
+        }
+      </dl>
+
+      @if (!reservation.paid) {
+        <a [routerLink]="['/reservations', reservation.id, 'pay']" class="primary">Pagar ahora</a>
+      }
+
+      @if (canChangeStatus && nextStatuses.length > 0) {
+        <div class="status-actions">
+          <span class="amenities-picker-label">Cambiar estado</span>
+          <div class="actions-cell">
+            @for (next of nextStatuses; track next) {
+              <button type="button" class="secondary" (click)="changeStatus(next)">{{ next }}</button>
+            }
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+}

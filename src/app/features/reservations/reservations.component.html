@@ -1,0 +1,140 @@
+<h1>Reservas</h1>
+<p class="subtitle">Elige una unidad disponible, define las fechas y crea tu reserva.</p>
+
+@if (errorMessage) {
+  <p class="error">{{ errorMessage }}</p>
+}
+@if (successMessage) {
+  <p class="success">{{ successMessage }}</p>
+}
+
+<section class="unit-picker-section">
+  <h3>1. Elige tu unidad</h3>
+  @if (loadingUnits) {
+    <p>Cargando unidades...</p>
+  } @else {
+    <div class="unit-picker-grid">
+      @for (u of catalogUnits; track u.id) {
+        <article
+          class="unit-pick-card"
+          [class.selected]="selectedUnitId === u.id"
+          [class.disabled]="!u.active || u.availableUnits <= 0"
+          (click)="selectUnit(u)"
+        >
+          <app-unit-photo [type]="u.type" />
+          <div class="unit-pick-body">
+            <div class="unit-pick-heading">
+              <h4>{{ u.code }}</h4>
+              <span class="unit-pick-price">${{ u.nightlyRate | number: '1.0-0' }} / noche</span>
+            </div>
+            <p class="unit-pick-meta">Capacidad {{ u.capacity }}</p>
+            @if (u.amenities.length > 0) {
+              <div class="amenity-tags">
+                @for (amenity of u.amenities; track amenity) {
+                  <span class="amenity-tag">{{ amenityLabels[amenity] }}</span>
+                }
+              </div>
+            }
+            @if (u.availableUnits > 0 && u.active) {
+              <span class="unit-pick-availability">{{ u.availableUnits }} disponibles</span>
+            } @else {
+              <span class="unit-pick-availability sold-out">Sin cupo</span>
+            }
+          </div>
+        </article>
+      } @empty {
+        <p>No hay unidades en el catálogo todavía.</p>
+      }
+    </div>
+  }
+</section>
+
+<form class="form-panel" #form="ngForm" (ngSubmit)="create()">
+  <h3>2. Fechas y huéspedes</h3>
+  @if (selectedUnit) {
+    <p class="selected-unit-hint">Unidad seleccionada: <strong>{{ selectedUnit.code }}</strong></p>
+  } @else {
+    <p class="selected-unit-hint muted">Selecciona una unidad arriba para continuar.</p>
+  }
+  <div class="form-row">
+    <label>
+      Check-in
+      <input type="date" name="checkInDate" [(ngModel)]="draft.checkInDate" required />
+    </label>
+    <label>
+      Check-out
+      <input type="date" name="checkOutDate" [(ngModel)]="draft.checkOutDate" required />
+    </label>
+    <label>
+      Huéspedes
+      <input type="number" name="guestCount" [(ngModel)]="draft.guestCount" min="1" required />
+    </label>
+  </div>
+
+  <div class="payment-timing-row">
+    <span class="amenities-picker-label">¿Cuándo deseas pagar?</span>
+    <label class="radio-option">
+      <input type="radio" name="paymentTiming" value="INMEDIATO" [(ngModel)]="draft.paymentTiming" />
+      Ahora
+    </label>
+    <label class="radio-option">
+      <input type="radio" name="paymentTiming" value="CHECKIN" [(ngModel)]="draft.paymentTiming" />
+      Al hacer check-in
+    </label>
+  </div>
+
+  @if (estimatedTotal !== null) {
+    <p class="estimated-total">
+      Total estimado ({{ estimatedNights }} {{ estimatedNights === 1 ? 'noche' : 'noches' }}):
+      <strong>${{ estimatedTotal | number: '1.0-0' }}</strong>
+      <span class="muted"> — el monto final lo confirma el sistema al crear la reserva.</span>
+    </p>
+  }
+
+  <button type="submit" class="primary" [disabled]="form.invalid || !canSubmit">Crear reserva</button>
+</form>
+
+@if (loading) {
+  <p>Cargando...</p>
+} @else {
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Unidad</th>
+        <th>Check-in</th>
+        <th>Check-out</th>
+        <th>Monto</th>
+        <th>Pago</th>
+        <th>Estado</th>
+        <th>Detalle</th>
+        @if (canChangeStatus) {
+          <th>Acciones</th>
+        }
+      </tr>
+    </thead>
+    <tbody>
+      @for (r of reservations; track r.id) {
+        <tr>
+          <td>{{ r.id }}</td>
+          <td>{{ r.unitId }}</td>
+          <td>{{ r.checkInDate }}</td>
+          <td>{{ r.checkOutDate }}</td>
+          <td>${{ r.totalAmount | number: '1.0-0' }}</td>
+          <td>{{ paymentTimingLabels[r.paymentTiming] }} · {{ r.paid ? 'Pagado' : 'Pendiente' }}</td>
+          <td><span class="status-badge">{{ r.status }}</span></td>
+          <td><a [routerLink]="['/reservations', r.id]">Ver detalle</a></td>
+          @if (canChangeStatus) {
+            <td class="actions-cell">
+              @for (next of nextStatuses(r); track next) {
+                <button type="button" class="secondary" (click)="changeStatus(r, next)">{{ next }}</button>
+              }
+            </td>
+          }
+        </tr>
+      } @empty {
+        <tr><td [attr.colspan]="canChangeStatus ? 9 : 8">No hay reservas todavía.</td></tr>
+      }
+    </tbody>
+  </table>
+}

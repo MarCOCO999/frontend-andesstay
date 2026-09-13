@@ -1,0 +1,67 @@
+<h1>Reportería</h1>
+<p class="subtitle">Reservas por hora, tiempo de ciclo y unidades más demandadas.</p>
+
+@if (errorMessage) {
+  <p class="error">{{ errorMessage }}</p>
+}
+
+<div class="form-panel">
+  <div class="form-row">
+    <label>
+      Rango KPIs
+      <select [(ngModel)]="kpisRange" (ngModelChange)="reloadAll()">
+        <option value="last24h">Últimas 24 horas</option>
+        <option value="last7d">Últimos 7 días</option>
+        <option value="last30d">Últimos 30 días</option>
+      </select>
+    </label>
+    <label>
+      Rango unidades top
+      <select [(ngModel)]="topUnitsRange" (ngModelChange)="reloadAll()">
+        <option value="last7d">Últimos 7 días</option>
+        <option value="last30d">Últimos 30 días</option>
+      </select>
+    </label>
+  </div>
+</div>
+
+@if (loading) {
+  <p>Cargando...</p>
+} @else {
+  <section class="cards">
+    <div class="card">
+      <span class="card-label">Ocupación activa</span>
+      <span class="card-value">{{ kpis?.activeOccupancy ?? 0 }}</span>
+    </div>
+    <div class="card">
+      <span class="card-label">Tiempo de ciclo promedio</span>
+      <span class="card-value">
+        {{ kpis?.avgCycleTimeMinutes != null ? (kpis!.avgCycleTimeMinutes | number: '1.0-0') + ' min' : 'Sin datos' }}
+      </span>
+    </div>
+  </section>
+
+  <h2>Reservas por hora</h2>
+  <table>
+    <thead><tr><th>Hora</th><th>Reservas</th></tr></thead>
+    <tbody>
+      @for (bucket of kpis?.reservationsPerHour; track bucket.hour) {
+        <tr><td>{{ bucket.hour }}</td><td>{{ bucket.reservations }}</td></tr>
+      } @empty {
+        <tr><td colspan="2">Sin datos en el rango seleccionado.</td></tr>
+      }
+    </tbody>
+  </table>
+
+  <h2>Unidades más demandadas</h2>
+  <table>
+    <thead><tr><th>Unidad</th><th>Reservas</th></tr></thead>
+    <tbody>
+      @for (u of topUnits; track u.unitId) {
+        <tr><td>{{ u.unitId }}</td><td>{{ u.reservations }}</td></tr>
+      } @empty {
+        <tr><td colspan="2">Sin datos en el rango seleccionado.</td></tr>
+      }
+    </tbody>
+  </table>
+}

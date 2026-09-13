@@ -1,0 +1,62 @@
+<a routerLink="/reservations" class="back-link">← Volver a reservas</a>
+
+@if (loading) {
+  <p>Cargando...</p>
+} @else if (errorMessage && !reservation) {
+  <p class="error">{{ errorMessage }}</p>
+} @else if (paidReservation) {
+  <div class="receipt-card">
+    <div class="receipt-icon">✓</div>
+    <h1>Pago simulado con éxito</h1>
+    <p class="subtitle">Esta es una pasarela de pago de simulación académica: no se procesó ningún cobro real.</p>
+
+    <dl>
+      <dt>Reserva</dt>
+      <dd>#{{ paidReservation.id }}</dd>
+
+      <dt>Monto pagado</dt>
+      <dd class="amount">${{ paidReservation.totalAmount | number: '1.0-0' }}</dd>
+
+      <dt>Método</dt>
+      <dd>{{ methodLabels[paidReservation.paymentMethod!] }}</dd>
+
+      <dt>N° de transacción</dt>
+      <dd><code>{{ paidReservation.transactionId }}</code></dd>
+
+      <dt>Fecha</dt>
+      <dd>{{ paidReservation.paidAt | date: 'medium' }}</dd>
+    </dl>
+
+    <button type="button" class="primary" (click)="goToDetail()">Ver detalle de la reserva</button>
+  </div>
+} @else if (reservation) {
+  <div class="checkout-card">
+    <h1>Pagar reserva #{{ reservation.id }}</h1>
+    <p class="disclaimer">
+      Pasarela de pago simulada con fines académicos. No se solicitan ni almacenan datos reales de tarjetas.
+    </p>
+
+    <div class="checkout-summary">
+      <span>Monto a pagar</span>
+      <strong>${{ reservation.totalAmount | number: '1.0-0' }}</strong>
+    </div>
+
+    @if (errorMessage) {
+      <p class="error">{{ errorMessage }}</p>
+    }
+
+    <fieldset [disabled]="processing">
+      <legend>Método de pago</legend>
+      @for (method of methods; track method) {
+        <label class="radio-option">
+          <input type="radio" name="method" [value]="method" [(ngModel)]="selectedMethod" />
+          {{ methodLabels[method] }}
+        </label>
+      }
+    </fieldset>
+
+    <button type="button" class="primary" [disabled]="processing" (click)="confirmPayment()">
+      {{ processing ? 'Procesando pago simulado…' : 'Confirmar pago' }}
+    </button>
+  </div>
+}

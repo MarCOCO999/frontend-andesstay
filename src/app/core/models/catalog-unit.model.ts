@@ -40,6 +40,7 @@ export interface CatalogUnit {
   availableUnits: number;
   active: boolean;
   amenities: Amenity[];
+  imageUrl: string | null;
   createdAt: string;
   updatedAt: string;
 }
@@ -51,6 +52,7 @@ export interface CreateCatalogUnitRequest {
   nightlyRate: number;
   totalUnits: number;
   amenities: Amenity[];
+  imageUrl: string | null;
 }
 
 export interface UpdateCatalogUnitRequest {
@@ -58,4 +60,5 @@ export interface UpdateCatalogUnitRequest {
   availableUnits: number;
   active: boolean;
   amenities: Amenity[];
+  imageUrl: string | null;
 }

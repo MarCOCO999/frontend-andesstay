@@ -80,6 +80,27 @@
   gap: 0.5rem;
 }
 
+.image-picker {
+  margin: 0.9rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: flex-start;
+
+  .muted {
+    color: var(--color-text-muted);
+    font-size: 0.82rem;
+  }
+}
+
+.image-preview {
+  width: 140px;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  border-radius: var(--radius);
+  border: 1px solid var(--color-border);
+}
+
 .amenity-chip {
   display: inline-flex;
   align-items: center;

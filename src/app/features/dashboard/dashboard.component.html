@@ -9,29 +9,52 @@
   <p>Cargando...</p>
 } @else if (errorMessage) {
   <p class="error">{{ errorMessage }}</p>
-} @else if (currentUser.hasRole('Admin')) {
+} @else if (isStaff) {
+  <h2>Resumen de reservas</h2>
   <section class="cards">
     <div class="card">
-      <span class="card-label">Ocupación activa</span>
-      <span class="card-value">{{ kpis?.activeOccupancy ?? 0 }}</span>
+      <span class="card-label">Total de reservas</span>
+      <span class="card-value">{{ statusSummary.total }}</span>
     </div>
     <div class="card">
-      <span class="card-label">Tiempo de ciclo promedio</span>
-      <span class="card-value">
-        {{ kpis?.avgCycleTimeMinutes != null ? (kpis!.avgCycleTimeMinutes | number: '1.0-0') + ' min' : 'Sin datos' }}
-      </span>
+      <span class="card-label">Pendientes</span>
+      <span class="card-value">{{ statusSummary.pending }}</span>
     </div>
     <div class="card">
-      <span class="card-label">Reservas por hora (últimas 24h)</span>
-      <ul>
-        @for (bucket of kpis?.reservationsPerHour; track bucket.hour) {
-          <li>{{ bucket.hour }}: {{ bucket.reservations }}</li>
-        } @empty {
-          <li>Sin reservas en el rango.</li>
-        }
-      </ul>
+      <span class="card-label">Canceladas</span>
+      <span class="card-value">{{ statusSummary.cancelled }}</span>
+    </div>
+    <div class="card">
+      <span class="card-label">Con checkout</span>
+      <span class="card-value">{{ statusSummary.checkedOut }}</span>
     </div>
   </section>
+
+  @if (currentUser.hasRole('Admin')) {
+    <h2>Indicadores (últimas 24h)</h2>
+    <section class="cards">
+      <div class="card">
+        <span class="card-label">Ocupación activa</span>
+        <span class="card-value">{{ kpis?.activeOccupancy ?? 0 }}</span>
+      </div>
+      <div class="card">
+        <span class="card-label">Tiempo de ciclo promedio</span>
+        <span class="card-value">
+          {{ kpis?.avgCycleTimeMinutes != null ? (kpis!.avgCycleTimeMinutes | number: '1.0-0') + ' min' : 'Sin datos' }}
+        </span>
+      </div>
+      <div class="card">
+        <span class="card-label">Reservas por hora</span>
+        <ul>
+          @for (bucket of kpis?.reservationsPerHour; track bucket.hour) {
+            <li>{{ bucket.hour }}: {{ bucket.reservations }}</li>
+          } @empty {
+            <li>Sin reservas en el rango.</li>
+          }
+        </ul>
+      </div>
+    </section>
+  }
 } @else {
   <section>
     <h2>Tus reservas</h2>

@@ -18,7 +18,7 @@
   <div class="detail-layout">
     @if (unit) {
       <article class="unit-summary-card">
-        <app-unit-photo [type]="unit.type" />
+        <app-unit-photo [type]="unit.type" [imageUrl]="unit.imageUrl" />
         <div class="unit-summary-body">
           <h3>{{ unit.code }}</h3>
           <p class="unit-meta">Capacidad {{ unit.capacity }} · ${{ unit.nightlyRate | number: '1.0-0' }} / noche</p>

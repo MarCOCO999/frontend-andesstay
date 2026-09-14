@@ -21,7 +21,7 @@
           [class.disabled]="!u.active || u.availableUnits <= 0"
           (click)="selectUnit(u)"
         >
-          <app-unit-photo [type]="u.type" />
+          <app-unit-photo [type]="u.type" [imageUrl]="u.imageUrl" />
           <div class="unit-pick-body">
             <div class="unit-pick-heading">
               <h4>{{ u.code }}</h4>

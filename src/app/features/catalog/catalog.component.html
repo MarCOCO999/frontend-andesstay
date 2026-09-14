@@ -47,6 +47,16 @@
         }
       </div>
     </div>
+    <div class="image-picker">
+      <span class="amenities-picker-label">Foto de referencia</span>
+      <input type="file" accept="image/png,image/jpeg,image/webp" (change)="onNewUnitImageSelected($event)" />
+      @if (uploadingNewImage) {
+        <span class="muted">Subiendo...</span>
+      }
+      @if (newUnit.imageUrl) {
+        <img [src]="newUnit.imageUrl" alt="Vista previa" class="image-preview" />
+      }
+    </div>
     <button type="submit" class="primary" [disabled]="form.invalid">Crear unidad</button>
   </form>
 }
@@ -57,7 +67,7 @@
   <div class="unit-grid">
     @for (u of units; track u.id) {
       <article class="unit-card" [class.inactive]="!u.active">
-        <app-unit-photo [type]="u.type" />
+        <app-unit-photo [type]="u.type" [imageUrl]="u.imageUrl" />
 
         <div class="unit-body">
           <div class="unit-heading">
@@ -90,6 +100,16 @@
                     </label>
                   }
                 </div>
+              </div>
+              <div class="image-picker">
+                <span class="amenities-picker-label">Foto de referencia</span>
+                <input type="file" accept="image/png,image/jpeg,image/webp" (change)="onEditImageSelected($event)" />
+                @if (uploadingEditImage) {
+                  <span class="muted">Subiendo...</span>
+                }
+                @if (editForm.imageUrl) {
+                  <img [src]="editForm.imageUrl" alt="Vista previa" class="image-preview" />
+                }
               </div>
               <div class="actions-cell">
                 <button type="button" class="secondary" (click)="saveEdit(u)">Guardar</button>

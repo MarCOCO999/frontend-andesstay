@@ -1,4 +1,6 @@
-@if (type === 'CABANA') {
+@if (imageUrl) {
+  <img [src]="imageUrl" alt="" class="unit-photo-img" />
+} @else if (type === 'CABANA') {
   <!-- TODO: reemplazar por fotografia real de la cabana/lodge (ver /public/images) -->
   <svg viewBox="0 0 200 140" xmlns="http://www.w3.org/2000/svg">
     <rect width="200" height="140" fill="#e7cdb0" />

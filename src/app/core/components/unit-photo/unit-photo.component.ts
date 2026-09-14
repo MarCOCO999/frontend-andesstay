@@ -13,4 +13,6 @@ import { UnitType } from '../../models/catalog-unit.model';
 })
 export class UnitPhotoComponent {
   @Input({ required: true }) type!: UnitType;
+  /** Foto real subida por un Admin; si es null se usa la ilustracion generica del tipo. */
+  @Input() imageUrl: string | null = null;
 }

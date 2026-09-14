@@ -28,7 +28,9 @@ export class CatalogComponent implements OnInit {
   errorMessage = '';
   successMessage = '';
   editingId: number | null = null;
-  editForm: UpdateCatalogUnitRequest = { nightlyRate: 0, availableUnits: 0, active: true, amenities: [] };
+  editForm: UpdateCatalogUnitRequest = { nightlyRate: 0, availableUnits: 0, active: true, amenities: [], imageUrl: null };
+  uploadingNewImage = false;
+  uploadingEditImage = false;
 
   newUnit: CreateCatalogUnitRequest = {
     code: '',
@@ -37,6 +39,7 @@ export class CatalogComponent implements OnInit {
     nightlyRate: 0,
     totalUnits: 1,
     amenities: [],
+    imageUrl: null,
   };
 
   constructor(
@@ -88,12 +91,40 @@ export class CatalogComponent implements OnInit {
     this.editForm.amenities = this.toggleAmenity(this.editForm.amenities, amenity);
   }
 
+  async onNewUnitImageSelected(event: Event): Promise<void> {
+    const file = (event.target as HTMLInputElement).files?.[0];
+    if (!file) return;
+    this.clearMessages();
+    this.uploadingNewImage = true;
+    try {
+      this.newUnit.imageUrl = await this.catalogService.uploadUnitImage(file);
+    } catch {
+      this.errorMessage = 'No se pudo subir la imagen.';
+    } finally {
+      this.uploadingNewImage = false;
+    }
+  }
+
+  async onEditImageSelected(event: Event): Promise<void> {
+    const file = (event.target as HTMLInputElement).files?.[0];
+    if (!file) return;
+    this.clearMessages();
+    this.uploadingEditImage = true;
+    try {
+      this.editForm.imageUrl = await this.catalogService.uploadUnitImage(file);
+    } catch {
+      this.errorMessage = 'No se pudo subir la imagen.';
+    } finally {
+      this.uploadingEditImage = false;
+    }
+  }
+
   create(): void {
     this.clearMessages();
     this.catalogService.create(this.newUnit).subscribe({
       next: () => {
         this.successMessage = 'Unidad creada correctamente.';
-        this.newUnit = { code: '', type: 'HABITACION', capacity: 2, nightlyRate: 0, totalUnits: 1, amenities: [] };
+        this.newUnit = { code: '', type: 'HABITACION', capacity: 2, nightlyRate: 0, totalUnits: 1, amenities: [], imageUrl: null };
         this.reload();
       },
       error: (err: HttpErrorResponse) => this.showError(err, 'No se pudo crear la unidad.'),
@@ -107,6 +138,7 @@ export class CatalogComponent implements OnInit {
       availableUnits: unit.availableUnits,
       active: unit.active,
       amenities: [...unit.amenities],
+      imageUrl: unit.imageUrl,
     };
   }
 

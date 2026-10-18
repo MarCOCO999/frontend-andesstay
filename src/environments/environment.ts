@@ -10,5 +10,6 @@ export const environment = {
   // Scope expuesto por el App Registration ("Expose an API"): api://<clientId>/api.access
   apiScope: 'api://d6959b0c-9ec2-432e-bddb-54bd0e83ace9/api.access',
   // BFF local (ms-andesstay-bff). En produccion esto apunta al API Gateway de AWS.
-  bffUrl: 'http://localhost:8081',
+  // Apuntando al API Gateway de AWS. Para trabajar contra el backend local: 'http://localhost:8081'.
+  bffUrl: 'https://e94n72mnmk.execute-api.us-east-1.amazonaws.com',
 };

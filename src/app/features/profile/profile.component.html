@@ -1,0 +1,49 @@
+@if (onboarding) {
+  <h1>Completa tu registro</h1>
+  <p class="subtitle">Es tu primer ingreso a AndesStay. Necesitamos estos datos para emitir tus reservas y vouchers.</p>
+} @else {
+  <h1>Mi perfil</h1>
+  <p class="subtitle">Estos datos se usan en tus próximas reservas. Las reservas ya hechas conservan los datos con que se crearon.</p>
+}
+
+@if (errorMessage) {
+  <p class="error">{{ errorMessage }}</p>
+}
+@if (successMessage) {
+  <p class="success">{{ successMessage }}</p>
+}
+
+@if (loading) {
+  <p>Cargando...</p>
+} @else {
+  <form class="form-panel profile-form" #form="ngForm" (ngSubmit)="save()">
+    <div class="form-row">
+      <label>
+        Nombre completo
+        <input type="text" name="fullName" [(ngModel)]="details.fullName" required maxlength="150" />
+      </label>
+      <label>
+        RUT / Pasaporte
+        <input type="text" name="documentId" [(ngModel)]="details.documentId" required maxlength="20" placeholder="12.345.678-9" />
+      </label>
+    </div>
+    <div class="form-row">
+      <label>
+        Email
+        <input type="email" name="email" [(ngModel)]="details.email" required email maxlength="150" />
+      </label>
+      <label>
+        Teléfono
+        <input type="tel" name="phone" [(ngModel)]="details.phone" required pattern="^\+?[0-9 ()-]{6,30}$" placeholder="+56 9 1234 5678" />
+      </label>
+      <label>
+        País / nacionalidad
+        <input type="text" name="country" [(ngModel)]="details.country" required maxlength="60" placeholder="Chile" />
+      </label>
+    </div>
+
+    <button type="submit" class="primary" [disabled]="form.invalid || saving">
+      {{ isNew ? 'Completar registro' : 'Guardar cambios' }}
+    </button>
+  </form>
+}

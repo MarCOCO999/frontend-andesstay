@@ -6,6 +6,8 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { CurrentUserService } from '../../core/auth/current-user.service';
 import { ReservationsService } from '../../core/services/reservations.service';
 import { CatalogService } from '../../core/services/catalog.service';
+import { ProfileService } from '../../core/services/profile.service';
+import { GuestDetails, emptyGuestDetails } from '../../core/models/guest-profile.model';
 import { UnitPhotoComponent } from '../../core/components/unit-photo/unit-photo.component';
 import {
   NEXT_STATUS,
@@ -40,16 +42,24 @@ export class ReservationsComponent implements OnInit {
     guestCount: 1,
     paymentTiming: 'CHECKIN' as PaymentTiming,
   };
+  /** Datos del huesped que ingresa Operador/Admin en el meson. */
+  guest: GuestDetails = emptyGuestDetails();
+  /** Perfil del Cliente: la reserva se crea a su nombre. */
+  myProfile: GuestDetails | null = null;
 
   constructor(
     public currentUser: CurrentUserService,
     private reservationsService: ReservationsService,
     private catalogService: CatalogService,
+    private profileService: ProfileService,
     private router: Router,
   ) {}
 
   ngOnInit(): void {
     this.reload();
+    if (this.currentUser.isGuestOnly) {
+      this.profileService.getMine().subscribe({ next: (profile) => (this.myProfile = profile) });
+    }
     this.catalogService.list({ active: true }).subscribe({
       next: (units) => {
         this.catalogUnits = units;
@@ -122,7 +132,11 @@ export class ReservationsComponent implements OnInit {
     this.clearMessages();
     const payNow = this.draft.paymentTiming === 'INMEDIATO';
     this.reservationsService
-      .create({ unitId: this.selectedUnitId, ...this.draft })
+      .create({
+        unitId: this.selectedUnitId,
+        ...this.draft,
+        guest: this.currentUser.isGuestOnly ? undefined : this.guest,
+      })
       .subscribe({
         next: (created) => {
           if (payNow) {
@@ -132,6 +146,7 @@ export class ReservationsComponent implements OnInit {
           this.successMessage = `Reserva creada correctamente. Monto total: $${created.totalAmount.toLocaleString('es-CL')}.`;
           this.selectedUnitId = null;
           this.draft = { checkInDate: '', checkOutDate: '', guestCount: 1, paymentTiming: 'CHECKIN' };
+          this.guest = emptyGuestDetails();
           this.reload();
         },
         error: (err: HttpErrorResponse) => this.showError(err, 'No se pudo crear la reserva.'),

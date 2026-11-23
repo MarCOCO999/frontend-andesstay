@@ -38,6 +38,16 @@
         <dt>Estado</dt>
         <dd><span class="status-badge">{{ reservation.status }}</span></dd>
 
+        <dt>Cliente</dt>
+        <dd>
+          @if (reservation.guestName) {
+            <strong>{{ reservation.guestName }}</strong> · {{ reservation.guestDocument }}
+            <div class="muted">{{ reservation.guestEmail }} · {{ reservation.guestPhone }} · {{ reservation.guestCountry }}</div>
+          } @else {
+            <span class="muted">Sin datos (reserva anterior al registro de clientes)</span>
+          }
+        </dd>
+
         <dt>Check-in</dt>
         <dd>{{ reservation.checkInDate }}</dd>
 

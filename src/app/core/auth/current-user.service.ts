@@ -28,6 +28,11 @@ export class CurrentUserService {
     return roles.some((role) => this.hasRole(role));
   }
 
+  /** Cliente sin rol de Operador/Admin: reserva para si mismo, con los datos de su perfil. */
+  get isGuestOnly(): boolean {
+    return this.hasRole('Cliente') && !this.hasAnyRole('Admin', 'Operador');
+  }
+
   logout(): void {
     this.msalService.logoutRedirect();
   }

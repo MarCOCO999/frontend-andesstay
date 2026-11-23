@@ -69,6 +69,11 @@ h2 {
   font-size: 1rem;
 }
 
+.muted {
+  color: var(--color-text-muted);
+  font-size: 0.85rem;
+}
+
 .error {
   color: var(--color-error-text);
   background: var(--color-error-bg);

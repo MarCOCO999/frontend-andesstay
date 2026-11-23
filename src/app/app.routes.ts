@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { MsalGuard } from '@azure/msal-angular';
+import { profileGuard } from './core/auth/profile.guard';
 import { roleGuard } from './core/auth/role.guard';
 import { ShellComponent } from './layout/shell/shell.component';
 
@@ -12,11 +13,17 @@ export const routes: Routes = [
     path: '',
     component: ShellComponent,
     canActivate: [MsalGuard],
-    canActivateChild: [MsalGuard],
+    canActivateChild: [MsalGuard, profileGuard],
     children: [
       {
         path: 'dashboard',
         loadComponent: () => import('./features/dashboard/dashboard.component').then((m) => m.DashboardComponent),
+      },
+      {
+        path: 'profile',
+        loadComponent: () => import('./features/profile/profile.component').then((m) => m.ProfileComponent),
+        canActivate: [roleGuard],
+        data: { roles: ['Admin', 'Operador', 'Cliente'] },
       },
       {
         path: 'reservations',

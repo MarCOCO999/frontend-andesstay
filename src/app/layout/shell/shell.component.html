@@ -16,6 +16,9 @@
     </nav>
     <div class="user-info">
       <div class="user-name">{{ currentUser.displayName }}</div>
+      @if (currentUser.hasAnyRole('Admin', 'Operador', 'Cliente')) {
+        <a class="profile-link" routerLink="/profile" routerLinkActive="active">Mi perfil</a>
+      }
       <div class="user-roles">{{ currentUser.roles.join(', ') }}</div>
       <button type="button" (click)="currentUser.logout()">Cerrar sesión</button>
     </div>

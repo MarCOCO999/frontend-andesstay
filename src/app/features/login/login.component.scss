@@ -122,3 +122,19 @@
   font-size: 0.88rem;
   margin: -0.75rem 0 1.25rem;
 }
+
+.login-card .register-hint {
+  margin: 1.25rem 0 0;
+  font-size: 0.88rem;
+}
+
+.link-button {
+  background: none;
+  border: none;
+  padding: 0;
+  color: var(--color-primary);
+  font: inherit;
+  font-weight: 600;
+  text-decoration: underline;
+  cursor: pointer;
+}

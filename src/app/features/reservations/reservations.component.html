@@ -71,6 +71,44 @@
     </label>
   </div>
 
+  @if (currentUser.isGuestOnly) {
+    @if (myProfile) {
+      <p class="selected-unit-hint">
+        Reserva a nombre de <strong>{{ myProfile.fullName }}</strong> ({{ myProfile.documentId }}).
+        <a routerLink="/profile">Editar mis datos</a>
+      </p>
+    }
+  } @else {
+    <h3>3. Datos del huésped</h3>
+    <p class="selected-unit-hint muted">
+      Si el RUT/pasaporte ya está registrado, la reserva queda asociada a la cuenta de ese cliente.
+    </p>
+    <div class="form-row">
+      <label>
+        Nombre completo
+        <input type="text" name="guestFullName" [(ngModel)]="guest.fullName" required maxlength="150" />
+      </label>
+      <label>
+        RUT / Pasaporte
+        <input type="text" name="guestDocumentId" [(ngModel)]="guest.documentId" required maxlength="20" />
+      </label>
+    </div>
+    <div class="form-row">
+      <label>
+        Email
+        <input type="email" name="guestEmail" [(ngModel)]="guest.email" required email maxlength="150" />
+      </label>
+      <label>
+        Teléfono
+        <input type="tel" name="guestPhone" [(ngModel)]="guest.phone" required pattern="^\+?[0-9 ()-]{6,30}$" />
+      </label>
+      <label>
+        País / nacionalidad
+        <input type="text" name="guestCountry" [(ngModel)]="guest.country" required maxlength="60" />
+      </label>
+    </div>
+  }
+
   <div class="payment-timing-row">
     <span class="amenities-picker-label">¿Cuándo deseas pagar?</span>
     <label class="radio-option">
@@ -101,6 +139,7 @@
     <thead>
       <tr>
         <th>ID</th>
+        <th>Cliente</th>
         <th>Unidad</th>
         <th>Check-in</th>
         <th>Check-out</th>
@@ -117,6 +156,12 @@
       @for (r of reservations; track r.id) {
         <tr>
           <td>{{ r.id }}</td>
+          <td>
+            {{ r.guestName ?? '—' }}
+            @if (r.guestDocument) {
+              <div class="muted">{{ r.guestDocument }}</div>
+            }
+          </td>
           <td>{{ r.unitId }}</td>
           <td>{{ r.checkInDate }}</td>
           <td>{{ r.checkOutDate }}</td>
@@ -133,7 +178,7 @@
           }
         </tr>
       } @empty {
-        <tr><td [attr.colspan]="canChangeStatus ? 9 : 8">No hay reservas todavía.</td></tr>
+        <tr><td [attr.colspan]="canChangeStatus ? 10 : 9">No hay reservas todavía.</td></tr>
       }
     </tbody>
   </table>

@@ -56,6 +56,17 @@
       color: var(--color-text);
     }
 
+    .profile-link {
+      color: var(--color-primary);
+      text-decoration: none;
+      font-weight: 500;
+
+      &:hover,
+      &.active {
+        text-decoration: underline;
+      }
+    }
+
     .user-roles {
       color: var(--color-text-muted);
       background: var(--color-bg-alt);

@@ -1,3 +1,5 @@
+import { GuestDetails } from './guest-profile.model';
+
 export type ReservationStatus =
   | 'CREADA'
   | 'CONFIRMADA'
@@ -25,6 +27,12 @@ export const PAYMENT_METHOD_LABELS: Record<PaymentMethod, string> = {
 export interface Reservation {
   id: number;
   guestId: string;
+  // Nulos en las reservas creadas antes del registro de clientes.
+  guestName: string | null;
+  guestDocument: string | null;
+  guestEmail: string | null;
+  guestPhone: string | null;
+  guestCountry: string | null;
   unitId: number;
   checkInDate: string;
   checkOutDate: string;
@@ -47,6 +55,8 @@ export interface CreateReservationRequest {
   checkOutDate: string;
   guestCount: number;
   paymentTiming: PaymentTiming;
+  /** Solo Operador/Admin (reserva en el meson); el Cliente reserva con los datos de su perfil. */
+  guest?: GuestDetails;
 }
 
 /** Transiciones validas del estado de una reserva (misma maquina de estados que el backend). */

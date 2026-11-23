@@ -26,4 +26,12 @@ export class LoginComponent {
   login(): void {
     this.msalService.loginRedirect({ scopes: [environment.apiScope] });
   }
+
+  /** Mismo login de Azure AD, pero al volver lleva directo al formulario de registro de datos. */
+  register(): void {
+    this.msalService.loginRedirect({
+      scopes: [environment.apiScope],
+      redirectStartPage: `${window.location.origin}/profile?onboarding=true`,
+    });
+  }
 }
